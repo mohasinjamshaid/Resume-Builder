@@ -7,9 +7,35 @@ document.addEventListener('DOMContentLoaded', function() {
     const skillInput = document.getElementById('skill-input');
     let skills = [];
     const downloadBtn = document.getElementById('download-resume');
+    const ctaCreateBtn = document.getElementById('cta-create');
+    const ctaDemoBtn = document.getElementById('cta-demo');
 
     // Initialize
     loadUserDataInternal();
+    
+    // Animate stats when they come into view
+    function animateStats() {
+        const statNumbers = document.querySelectorAll('.stat-number');
+        statNumbers.forEach(stat => {
+            const targetValue = stat.textContent;
+            
+            // Skip if already animated
+            if (stat.dataset.animated) return;
+            
+            // For demo purposes, we'll just add a simple animation effect
+            setTimeout(() => {
+                stat.style.fontWeight = '800';
+                stat.style.transform = 'scale(1.1)';
+                stat.style.transition = 'transform 0.3s ease, font-weight 0.3s ease';
+                stat.dataset.animated = 'true';
+            }, 300);
+        });
+    }
+    
+    // Call animateStats when page loads
+    if (document.querySelector('.hero-stats')) {
+        setTimeout(animateStats, 1000);
+    }
 
     // Two-way data binding for inputs
     if (form) {
@@ -48,6 +74,47 @@ document.addEventListener('DOMContentLoaded', function() {
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function(){
             window.print();
+        });
+    }
+    
+    // Hero section button event handlers
+    if (ctaCreateBtn) {
+        ctaCreateBtn.addEventListener('click', function() {
+            document.getElementById('landing-section').classList.add('hidden');
+            document.getElementById('resume-section').classList.remove('hidden');
+        });
+    }
+    
+    if (ctaDemoBtn) {
+        ctaDemoBtn.addEventListener('click', function() {
+            // Show sample data in the form
+            document.getElementById('name').value = 'John Doe';
+            document.getElementById('email').value = 'john.doe@example.com';
+            document.getElementById('phone').value = '+1 (555) 123-4567';
+            document.getElementById('location').value = 'New York, NY';
+            document.getElementById('linkedin').value = 'linkedin.com/in/johndoe';
+            document.getElementById('summary').value = 'Experienced professional with expertise in software development and project management.';
+            document.getElementById('degree').value = 'Bachelor of Science in Computer Science';
+            document.getElementById('institution').value = 'University of Technology';
+            document.getElementById('year').value = '2020';
+            document.getElementById('cgpa').value = '3.8';
+            
+            // Add sample skills
+            skills = ['JavaScript', 'React', 'Node.js', 'Project Management'];
+            renderSkills();
+            
+            // Add sample experience
+            document.getElementById('exp-title').value = 'Software Engineer';
+            document.getElementById('exp-org').value = 'Tech Solutions Inc.';
+            document.getElementById('exp-duration').value = 'Jan 2021 - Present';
+            document.getElementById('exp-desc').value = 'Developed and maintained web applications using modern technologies.';
+            
+            document.getElementById('achievements').value = 'Certified AWS Developer, Led team of 5 developers on major project';
+            
+            // Update preview and show resume section
+            updatePreview();
+            document.getElementById('landing-section').classList.add('hidden');
+            document.getElementById('resume-section').classList.remove('hidden');
         });
     }
 
