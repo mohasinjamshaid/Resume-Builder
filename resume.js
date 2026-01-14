@@ -1,6 +1,7 @@
 // resume.js - Handles resume form inputs, live preview, and data binding
 
 document.addEventListener('DOMContentLoaded', function() {
+    
     const form = document.getElementById('resume-form');
     const skillsList = document.getElementById('skills-list');
     const addSkillBtn = document.getElementById('add-skill');
@@ -9,33 +10,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.getElementById('download-resume');
     const ctaCreateBtn = document.getElementById('cta-create');
     const ctaDemoBtn = document.getElementById('cta-demo');
+    
+    // New elements for updated header
+    const authControls = document.getElementById('auth-controls');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    const showAuthBtn = document.getElementById('show-auth');
+    const logoutDropdown = document.getElementById('logout-dropdown');
+    const dropdownUserName = document.getElementById('dropdown-user-name');
 
     // Initialize
     loadUserDataInternal();
-    
-    // Animate stats when they come into view
-    function animateStats() {
-        const statNumbers = document.querySelectorAll('.stat-number');
-        statNumbers.forEach(stat => {
-            const targetValue = stat.textContent;
-            
-            // Skip if already animated
-            if (stat.dataset.animated) return;
-            
-            // For demo purposes, we'll just add a simple animation effect
-            setTimeout(() => {
-                stat.style.fontWeight = '800';
-                stat.style.transform = 'scale(1.1)';
-                stat.style.transition = 'transform 0.3s ease, font-weight 0.3s ease';
-                stat.dataset.animated = 'true';
-            }, 300);
-        });
-    }
-    
-    // Call animateStats when page loads
-    if (document.querySelector('.hero-stats')) {
-        setTimeout(animateStats, 1000);
-    }
+    updateAuthUI();
 
     // Two-way data binding for inputs
     if (form) {
@@ -71,12 +56,83 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Toggle dropdown menu
+    const profileBtn = document.querySelector('.profile-btn');
+    if (profileBtn) {
+        profileBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const dropdown = document.getElementById('dropdown-menu');
+            dropdown.classList.toggle('show');
+        });
+    }
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('dropdown-menu');
+        const profileBtn = document.querySelector('.profile-btn');
+        
+        if (!profileBtn.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+    
+    // Conditionally show download button based on login status
+    function updateDownloadButtonVisibility() {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            downloadBtn.classList.remove('hidden');
+        } else {
+            downloadBtn.classList.add('hidden');
+        }
+    }
+    
+    // Update auth UI based on login status
+    function updateAuthUI() {
+        const currentUser = localStorage.getItem('currentUser');
+        
+        if (currentUser) {
+            // User is logged in
+            authControls.classList.add('hidden');
+            profileDropdown.classList.remove('hidden');
+            
+            // Set user name in dropdown
+            const userData = getUserData(currentUser);
+            const displayName = userData?.profile?.fullname || userData?.profile?.email || currentUser;
+            dropdownUserName.textContent = displayName;
+        } else {
+            // User is not logged in
+            authControls.classList.remove('hidden');
+            profileDropdown.classList.add('hidden');
+        }
+        
+        updateDownloadButtonVisibility();
+    }
+    
+    // Sign In button click handler
+    if (showAuthBtn) {
+        showAuthBtn.addEventListener('click', function() {
+            document.getElementById('auth-section').classList.remove('hidden');
+        });
+    }
+    
+    // Logout from dropdown
+    if (logoutDropdown) {
+        logoutDropdown.addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+        });
+    }
+    
+    // Check login status when page loads
+    updateAuthUI();
+    
     if (downloadBtn) {
         downloadBtn.addEventListener('click', function(){
             window.print();
         });
     }
-    
+
     // Hero section button event handlers
     if (ctaCreateBtn) {
         ctaCreateBtn.addEventListener('click', function() {
@@ -143,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const previewSkills = byId('preview-skills');
         if (previewSkills) previewSkills.innerHTML = skills.map(skill => `<span>${skill}</span>`).join('');
 
-        const previewExp = byId('preview-experience');
+        const previewExp = document.getElementById('preview-experience');
         if (previewExp) {
             const title = byId('exp-title') ? byId('exp-title').value : '';
             const org = byId('exp-org') ? byId('exp-org').value : '';
@@ -191,5 +247,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         renderSkills();
         updatePreview();
+        updateAuthUI(); // Update UI after loading user data
     }
 });

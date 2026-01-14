@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Builder</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Crect%20width='100'%20height='100'%20fill='%23007bff'/%3E%3Ctext%20x='50'%20y='57'%20font-size='50'%20fill='%23fff'%20font-family='Arial'%20font-weight='700'%20text-anchor='middle'%3ERB%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,11 +23,27 @@
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </span>
                 </button>
-                <button id="download-resume">Download</button>
-                <button id="show-login-top">Login</button>
-                <button id="show-register-top">Register</button>
-                <button id="logout" class="hidden">Logout</button>
-                <span id="user-name" class="hidden"></span>
+                <button id="download-resume" class="hidden">Download</button>
+                <div id="auth-controls">
+                    <button id="show-auth" class="sign-in-btn">Sign In</button>
+                </div>
+                <div id="profile-dropdown" class="profile-dropdown hidden">
+                    <button class="profile-btn">
+                        <svg class="profile-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6,9 12,15 18,9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="dropdown-content" id="dropdown-menu">
+                        <div class="dropdown-item user-info" id="dropdown-user-name">User Name</div>
+                        <a href="#" class="dropdown-item" id="profile-link">Profile</a>
+                        <a href="#" class="dropdown-item" id="settings-link">Settings</a>
+                        <a href="#" class="dropdown-item" id="logout-dropdown">Logout</a>
+                    </div>
+                </div>
             </div>
         </header>
         
