@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Resume Builder</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .register-container {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .register-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+            margin: 1rem;
+        }
+        
+        .register-card h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        
+        .register-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .register-form input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .register-form button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .register-form button:hover {
+            background-color: #218838;
+        }
+        
+        .register-form p {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .register-form a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .register-form a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .password-strength {
+            margin-bottom: 1rem;
+        }
+        
+        .strength-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 3px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+        
+        .strength-text {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .back-to-home {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .back-to-home:hover {
+            text-decoration: underline;
+        }
+        
+        /* Toast Notification Styles */
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #ffffff;
+            color: #333333;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e0e0e0;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 0.9rem;
+            max-width: 350px;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            border-left: 4px solid #28a745;
+        }
+
+        .toast-error {
+            border-left: 4px solid #dc3545;
+        }
+
+        .toast-info {
+            border-left: 4px solid #17a2b8;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .toast-notification {
+                left: 1rem;
+                right: 1rem;
+                bottom: 1rem;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <h2>Create Account</h2>
+            
+            <!-- Register Form -->
+            <div id="register-form" class="register-form">
+                <h3>Register for an Account</h3>
+                <form id="register">
+                    <label for="reg-fullname">Full Name</label>
+                    <input type="text" id="reg-fullname" required>
+                    <div class="error-message" id="name-error-message"></div>
+                    
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" required>
+                    <div class="error-message" id="email-error-message"></div>
+                    
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" required>
+                    <div class="error-message" id="password-error-message"></div>
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strength-fill"></div>
+                        </div>
+                        <div class="strength-text" id="strength-text"></div>
+                    </div>
+                    
+                    <button type="submit">Register</button>
+                </form>
+                <p>Already have an account? <a href="./login.html" id="show-login">Login</a></p>
+            </div>
+
+            <a href="./index.html" class="back-to-home">Back to Home</a>
+        </div>
+    </div>
+
+    <script src="validation.js"></script>
+    <script src="storage.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle register form submission
+            const registerForm = document.getElementById('register');
+            if (registerForm) {
+                registerForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // Clear previous errors
+                    ValidationUI.clearError('reg-fullname');
+                    ValidationUI.clearError('reg-email');
+                    ValidationUI.clearError('reg-password');
+
+                    const fullName = document.getElementById('reg-fullname').value.trim();
+                    const email = document.getElementById('reg-email').value.trim();
+                    const password = document.getElementById('reg-password').value;
+
+                    let isValid = true;
+
+                    // Validate full name
+                    if (Validator.isEmpty(fullName)) {
+                        ValidationUI.showError('reg-fullname', 'Full name is required');
+                        isValid = false;
+                    } else if (fullName.length < 2) {
+                        ValidationUI.showError('reg-fullname', 'Name must be at least 2 characters');
+                        isValid = false;
+                    }
+
+                    // Validate email
+                    if (Validator.isEmpty(email)) {
+                        ValidationUI.showError('reg-email', 'Email is required');
+                        isValid = false;
+                    } else if (!Validator.isValidEmail(email)) {
+                        ValidationUI.showError('reg-email', 'Please enter a valid email address');
+                        isValid = false;
+                    } else if (getUserData(email)) {
+                        ValidationUI.showError('reg-email', 'This email is already registered');
+                        isValid = false;
+                    }
+
+                    // Validate password
+                    const passwordValidation = Validator.validatePassword(password);
+                    if (Validator.isEmpty(password)) {
+                        ValidationUI.showError('reg-password', 'Password is required');
+                        isValid = false;
+                    } else if (!passwordValidation.isValid) {
+                        ValidationUI.showError('reg-password', passwordValidation.message);
+                        isValid = false;
+                    }
+
+                    if (!isValid) return;
+
+                    // Create user
+                    const userData = {
+                        fullName,
+                        password, // In production, this should be hashed
+                        profile: { fullname: fullName, email: email },
+                        resume: {},
+                        theme: 'light',
+                        session: false
+                    };
+
+                    saveUserData(email, userData);
+                    ValidationUI.showToast('Registration successful! Please login.', 'success');
+
+                    // Clear form and redirect to login
+                    registerForm.reset();
+                    setTimeout(() => {
+                        window.location.href = './login.html';
+                    }, 1500);
+                });
+            }
+            
+            // Handle real-time validation for registration form
+            const regEmailInput = document.getElementById('reg-email');
+            const regPasswordInput = document.getElementById('reg-password');
+            const regFullnameInput = document.getElementById('reg-fullname');
+
+            if (regEmailInput) {
+                regEmailInput.addEventListener('blur', function () {
+                    const email = this.value.trim();
+                    if (!Validator.isEmpty(email)) {
+                        if (!Validator.isValidEmail(email)) {
+                            ValidationUI.showError('reg-email', 'Please enter a valid email address');
+                        } else if (getUserData(email)) {
+                            ValidationUI.showError('reg-email', 'This email is already registered');
+                        } else {
+                            ValidationUI.clearError('reg-email');
+                            ValidationUI.showSuccess('reg-email');
+                        }
+                    }
+                });
+            }
+
+            if (regPasswordInput) {
+                regPasswordInput.addEventListener('input', function () {
+                    const password = this.value;
+                    if (password.length > 0) {
+                        const result = Validator.validatePassword(password);
+                        ValidationUI.showPasswordStrength('reg-password', result);
+                        if (result.isValid) {
+                            ValidationUI.clearError('reg-password');
+                        }
+                    }
+                });
+            }
+
+            if (regFullnameInput) {
+                regFullnameInput.addEventListener('blur', function () {
+                    const name = this.value.trim();
+                    if (!Validator.isEmpty(name) && name.length >= 2) {
+                        ValidationUI.clearError('reg-fullname');
+                        ValidationUI.showSuccess('reg-fullname');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

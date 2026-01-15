@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Resume Builder</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .login-container {
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+            margin: 1rem;
+        }
+        
+        .login-card h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        
+        .login-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .login-form input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .login-form button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .login-form button:hover {
+            background-color: #0056b3;
+        }
+        
+        .login-form p {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .login-form a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .login-form a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .password-strength {
+            margin-bottom: 1rem;
+        }
+        
+        .strength-bar {
+            height: 5px;
+            background-color: #eee;
+            border-radius: 3px;
+            margin: 0.5rem 0;
+            overflow: hidden;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background-color 0.3s;
+        }
+        
+        .strength-text {
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .back-to-home {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .back-to-home:hover {
+            text-decoration: underline;
+        }
+        
+        /* Toast Notification Styles */
+        .toast-notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background-color: #ffffff;
+            color: #333333;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e0e0e0;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 0.9rem;
+            max-width: 350px;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            border-left: 4px solid #28a745;
+        }
+
+        .toast-error {
+            border-left: 4px solid #dc3545;
+        }
+
+        .toast-info {
+            border-left: 4px solid #17a2b8;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .toast-notification {
+                left: 1rem;
+                right: 1rem;
+                bottom: 1rem;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Welcome Back</h2>
+            
+            <!-- Login Form -->
+            <div id="login-form" class="login-form">
+                <h3>Login to Your Account</h3>
+                <form id="login">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                    <div class="error-message" id="login-email-error"></div>
+                    
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                    <div class="error-message" id="login-password-error"></div>
+                    
+                    <button type="submit">Login</button>
+                </form>
+                <p>Don't have an account? <a href="./register.html" id="show-register">Register</a></p>
+            </div>
+
+            <a href="./index.html" class="back-to-home">Back to Home</a>
+        </div>
+    </div>
+
+    <script src="validation.js"></script>
+    <script src="storage.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle login form submission
+            const loginForm = document.getElementById('login');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    // Clear previous errors
+                    ValidationUI.clearError('login-email');
+                    ValidationUI.clearError('login-password');
+
+                    const email = document.getElementById('login-email').value.trim();
+                    const password = document.getElementById('login-password').value;
+
+                    let isValid = true;
+
+                    // Validate email
+                    if (Validator.isEmpty(email)) {
+                        ValidationUI.showError('login-email', 'Email is required');
+                        isValid = false;
+                    } else if (!Validator.isValidEmail(email)) {
+                        ValidationUI.showError('login-email', 'Please enter a valid email address');
+                        isValid = false;
+                    }
+
+                    // Validate password
+                    if (Validator.isEmpty(password)) {
+                        ValidationUI.showError('login-password', 'Password is required');
+                        isValid = false;
+                    }
+
+                    if (!isValid) return;
+
+                    // Check credentials
+                    const userData = getUserData(email);
+                    if (userData && userData.password === password) {
+                        userData.session = true;
+                        saveUserData(email, userData);
+                        localStorage.setItem('currentUser', email);
+                        ValidationUI.showToast('Login successful! Welcome back.', 'success');
+                        
+                        // Redirect to resume builder after successful login
+                        setTimeout(() => {
+                            window.location.href = './resume-builder.html';
+                        }, 1000);
+                    } else {
+                        ValidationUI.showError('login-email', 'Invalid email or password');
+                        ValidationUI.showError('login-password', 'Invalid email or password');
+                        ValidationUI.showToast('Invalid credentials. Please try again.', 'error');
+                    }
+                });
+            }
+            
+            // Handle real-time validation for login form
+            const loginEmailInput = document.getElementById('login-email');
+            if (loginEmailInput) {
+                loginEmailInput.addEventListener('blur', function () {
+                    const email = this.value.trim();
+                    if (!Validator.isEmpty(email) && !Validator.isValidEmail(email)) {
+                        ValidationUI.showError('login-email', 'Please enter a valid email address');
+                    } else {
+                        ValidationUI.clearError('login-email');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
