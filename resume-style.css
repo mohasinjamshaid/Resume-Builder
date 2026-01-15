@@ -435,6 +435,21 @@ textarea:focus {
     background-color: var(--accent-hover);
 }
 
+.download-preview-btn {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.download-preview-btn:hover {
+    background-color: var(--accent-hover);
+}
+
 .preview-section h2 {
     margin: 0;
     color: var(--text-primary);
@@ -448,6 +463,22 @@ textarea:focus {
     position: sticky;
     top: 2rem;
     height: fit-content;
+}
+
+.preview-header-with-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--bg-tertiary);
+    border-radius: 4px;
+}
+
+.preview-header-with-buttons h2 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 1.2rem;
 }
 
 #resume-preview {
@@ -470,14 +501,26 @@ textarea:focus {
 }
 
 .preview-header h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     margin-bottom: 0.5rem;
     color: #222;
+    text-align: center;
+    width: 100%;
+    display: block;
 }
 
 .preview-contact {
     font-size: 0.9rem;
     color: #666;
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.preview-contact span {
+    display: inline-block;
+    margin: 0 0.5rem;
 }
 
 .preview-summary h2,

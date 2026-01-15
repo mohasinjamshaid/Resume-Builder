@@ -175,6 +175,10 @@
                         </div>
 
                         <div class="preview-section">
+                            <div class="preview-header-with-buttons">
+                                <h2>Live Preview</h2>
+                                <button id="download-preview-pdf" class="download-preview-btn">Download PDF</button>
+                            </div>
                             <article id="resume-preview">
 
   <header class="preview-header">
@@ -391,48 +395,53 @@
             // Check login status when page loads
             updateAuthUI();
 
-            // PDF Export functionality
+            // Reusable PDF export function
+            function exportToPDF(buttonElement) {
+                // Validate that resume has minimum required data
+                const nameValue = document.getElementById('name').value.trim();
+
+                if (!nameValue) {
+                    ValidationUI.showToast('Please enter your name before downloading', 'error');
+                    document.getElementById('name').focus();
+                    return;
+                }
+
+                // Show loading toast
+                ValidationUI.showToast('Generating PDF...', 'info');
+
+                const element = document.getElementById('resume-preview');
+                const userName = nameValue.replace(/\s+/g, '_');
+                const filename = `${userName}_Resume.pdf`;
+
+                const opt = {
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: filename,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: {
+                        scale: 2,
+                        useCORS: true,
+                        letterRendering: true
+                    },
+                    jsPDF: {
+                        unit: 'in',
+                        format: 'letter',
+                        orientation: 'portrait',
+                        compress: true
+                    }
+                };
+
+                html2pdf().set(opt).from(element).save().then(() => {
+                    ValidationUI.showToast('Resume downloaded successfully!', 'success');
+                }).catch((error) => {
+                    console.error('PDF generation error:', error);
+                    ValidationUI.showToast('Error generating PDF. Please try again.', 'error');
+                });
+            }
+
+            // PDF Export functionality for header button
             if (downloadPdfBtn) {
                 downloadPdfBtn.addEventListener('click', function () {
-                    // Validate that resume has minimum required data
-                    const nameValue = document.getElementById('name').value.trim();
-
-                    if (!nameValue) {
-                        ValidationUI.showToast('Please enter your name before downloading', 'error');
-                        document.getElementById('name').focus();
-                        return;
-                    }
-
-                    // Show loading toast
-                    ValidationUI.showToast('Generating PDF...', 'info');
-
-                    const element = document.getElementById('resume-preview');
-                    const userName = nameValue.replace(/\s+/g, '_');
-                    const filename = `${userName}_Resume.pdf`;
-
-                    const opt = {
-                        margin: [0.5, 0.5, 0.5, 0.5],
-                        filename: filename,
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: {
-                            scale: 2,
-                            useCORS: true,
-                            letterRendering: true
-                        },
-                        jsPDF: {
-                            unit: 'in',
-                            format: 'letter',
-                            orientation: 'portrait',
-                            compress: true
-                        }
-                    };
-
-                    html2pdf().set(opt).from(element).save().then(() => {
-                        ValidationUI.showToast('Resume downloaded successfully!', 'success');
-                    }).catch((error) => {
-                        console.error('PDF generation error:', error);
-                        ValidationUI.showToast('Error generating PDF. Please try again.', 'error');
-                    });
+                    exportToPDF(this);
                 });
             }
 
@@ -440,45 +449,7 @@
             const downloadPreviewPdfBtn = document.getElementById('download-preview-pdf');
             if (downloadPreviewPdfBtn) {
                 downloadPreviewPdfBtn.addEventListener('click', function () {
-                    // Validate that resume has minimum required data
-                    const nameValue = document.getElementById('name').value.trim();
-
-                    if (!nameValue) {
-                        ValidationUI.showToast('Please enter your name before downloading', 'error');
-                        document.getElementById('name').focus();
-                        return;
-                    }
-
-                    // Show loading toast
-                    ValidationUI.showToast('Generating PDF...', 'info');
-
-                    const element = document.getElementById('resume-preview');
-                    const userName = nameValue.replace(/\s+/g, '_');
-                    const filename = `${userName}_Resume.pdf`;
-
-                    const opt = {
-                        margin: [0.5, 0.5, 0.5, 0.5],
-                        filename: filename,
-                        image: { type: 'jpeg', quality: 0.98 },
-                        html2canvas: {
-                            scale: 2,
-                            useCORS: true,
-                            letterRendering: true
-                        },
-                        jsPDF: {
-                            unit: 'in',
-                            format: 'letter',
-                            orientation: 'portrait',
-                            compress: true
-                        }
-                    };
-
-                    html2pdf().set(opt).from(element).save().then(() => {
-                        ValidationUI.showToast('Resume downloaded successfully!', 'success');
-                    }).catch((error) => {
-                        console.error('PDF generation error:', error);
-                        ValidationUI.showToast('Error generating PDF. Please try again.', 'error');
-                    });
+                    exportToPDF(this);
                 });
             }
 
