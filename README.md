@@ -115,3 +115,4 @@ Frontend Development | UI/UX | Web Applications
 
 This project is open-source and free to use for learning and portfolio purposes.
 
+This Resume Builder helps users create clean and professional resumes using simple web technologies.
